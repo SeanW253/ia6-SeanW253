@@ -8,21 +8,24 @@ import AppMode from "./../AppMode.js"
 import FeedPage from './FeedPage.js';
 import Rounds from './Rounds.js';
 import CoursesPage from './CoursesPage.js';
+import CreateAccountDialog from './CreateAccountDialog.js';
+import EditAccountDialog from './EditAccountDialog.js';
+import Exercise from './Exercise.js'
 
 const modeTitle = {};
-modeTitle[AppMode.LOGIN] = "Welcome to SpeedScore";
+modeTitle[AppMode.LOGIN] = "Welcome to the Workout Tracker";
 modeTitle[AppMode.FEED] = "Activity Feed";
-modeTitle[AppMode.ROUNDS] = "My Rounds";
-modeTitle[AppMode.ROUNDS_LOGROUND] = "Log New Round";
-modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Round";
-modeTitle[AppMode.COURSES] = "Courses";
+modeTitle[AppMode.ROUNDS] = "My Workouts";
+modeTitle[AppMode.ROUNDS_LOGROUND] = "Log New Workout";
+modeTitle[AppMode.ROUNDS_EDITROUND] = "Edit Workout";
+modeTitle[AppMode.COURSES] = "Gyms";
 
 const modeToPage = {};
 modeToPage[AppMode.LOGIN] = LoginPage;
 modeToPage[AppMode.FEED] = FeedPage;
-modeToPage[AppMode.ROUNDS] = Rounds;
-modeToPage[AppMode.ROUNDS_LOGROUND] = Rounds;
-modeToPage[AppMode.ROUNDS_EDITROUND] = Rounds;
+modeToPage[AppMode.ROUNDS] = Exercise;
+modeToPage[AppMode.ROUNDS_LOGROUND] = Exercise;
+modeToPage[AppMode.ROUNDS_EDITROUND] = Exercise;
 modeToPage[AppMode.COURSES] = CoursesPage;
 
 
@@ -32,7 +35,9 @@ class App extends React.Component {
     super();
     this.state = {mode: AppMode.LOGIN,
                   menuOpen: false,
-                  userId: ""};
+                  userId: "",
+                  shoCreateAccountDialog: false
+                  };
   }
 
   handleChangeMode = (newMode) => {
@@ -55,6 +60,11 @@ class App extends React.Component {
     this.setState({userId: Id});
   }
 
+  cancelCreateAccount = () => {
+    this.setState({shoCreateAccountDialog: false});
+  }
+
+
   render() {
     const ModePage = modeToPage[this.state.mode];
     return (
@@ -69,7 +79,12 @@ class App extends React.Component {
             menuOpen = {this.state.menuOpen}
             mode={this.state.mode}
             toggleMenuOpen={this.toggleMenuOpen}
+            // newurl={this.state.newurl}
+            // updatePic={this.updatePic}
             userId={this.state.userId}
+            changeshoAccount={() => {this.setState({shoCreateAccountDialog: true});}}
+            shoCreateAccountDialog={this.state.shoCreateAccountDialog}
+            cancelCreateAccount={this.cancelCreateAccount}
             logOut={() => this.handleChangeMode(AppMode.LOGIN)}/>
           <ModeBar 
             mode={this.state.mode} 
@@ -80,7 +95,7 @@ class App extends React.Component {
             mode={this.state.mode}
             changeMode={this.handleChangeMode}
             userId={this.state.userId}
-            setUserId={this.setUserId}/>
+            setUserId={this.setUserId} />
       </div>
     );  
   }

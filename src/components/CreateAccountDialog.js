@@ -1,4 +1,5 @@
 import React from 'react';
+import SideMenu from './SideMenu';
 
 class CreateAccountDialog extends React.Component {
 
@@ -84,7 +85,7 @@ class CreateAccountDialog extends React.Component {
         let userData = {
             displayName: this.state.displayName,
             password: this.state.accountPassword,
-            profilePicFile: this.state.profilePicFile, //if empty, use default
+            profilePicURL: this.state.profilePicURL, //if empty, use default
             profilePicDataURL: this.state.profilePicDataURL,
             securityQuestion: this.state.accountSecurityQuestion,
             securityAnswer: this.state.accountSecurityAnswer,
@@ -94,7 +95,7 @@ class CreateAccountDialog extends React.Component {
         //Commit to local storage
         localStorage.setItem(this.state.accountName,JSON.stringify(userData));
         //Invite user to log in using new account
-        this.props.newAccountCreated();
+       this.props.newAccountCreated();
     }
 
     render() {
@@ -217,7 +218,7 @@ class CreateAccountDialog extends React.Component {
                 />
             </label>
             <br/>
-            <button role="submit" 
+            <button role="submit" onSubmit={this.props.updatePic} 
                 className="btn btn-primary btn-color-theme modal-submit-btn">
                 <span className="fa fa-user-plus"></span>&nbsp;Create Account
             </button>
@@ -225,6 +226,8 @@ class CreateAccountDialog extends React.Component {
             </div>
         </div>
         </div>
+        <SideMenu 
+          newURL={this.profilePicDataURL}/>
     </div>
     );
     }

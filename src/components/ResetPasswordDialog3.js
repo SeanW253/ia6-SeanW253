@@ -1,7 +1,6 @@
 import React from 'react'
-import ResetPasswordDialog2 from './ResetPasswordDialog2.js';
 
-class ResetPasswordDialog extends React.Component {
+class ResetPasswordDialog3 extends React.Component {
     constructor() {
         super();
         //Create a ref for the email input DOM element
@@ -14,9 +13,9 @@ class ResetPasswordDialog extends React.Component {
                       profilePicURL: "https://icon-library.net//images/default-profile-icon/default-profile-icon-24.jpg",
                       accountPassword: "",
                       accountPasswordRepeat: "",
-                      accountSecurityQuestion: "Who Dis1",
+                      accountSecurityQuestion: "",
                       accountSecurityAnswer: "",
-                      showResetPasswordDialog2: false};
+                      };
 
     }
 
@@ -48,48 +47,39 @@ class ResetPasswordDialog extends React.Component {
         this.setState({[event.target.name]: event.target.value});//,this.checkAccountValidity);
     } 
 
-    //setDefaultDisplayName -- Triggered by onBlur() event of Email field.
-    //Sets default value of display name to value entered into Email field 
-    //as a courtesy.
-    setDefaultDisplayName = (event) => {
-      if (event.target.value.length > 0 && this.state.displayName === "") {
-        this.setState({displayName: event.target.value});
-      }
-    }
+    // //validate security question
+    // validateSecurityQuestion = () => {
+    //     let correctAns = this.props.accountSecurityAnswer;
+    //     let userAns = this.state.accountSecurityAnswer;
+
+    //     if (userAns == correctAns) {
+    //         this.setState({showResetPasswordDialog3: true});
+    //     }
+    // }
 
     //handleDialog1 - after the first dialog box, user finishes entering username, take to
     //the next dialog
-    handleDialog1 = (event) => {
+    handleDialog3 = (event) => {
         event.preventDefault();
 
-        this.checkAccountValidity();
-
-        //set the show state for dialog 2 to true
-        this.setState({showResetPasswordDialog2: true})
-
-        this.getSecurityQuestion();
-
-    }
-
-    //handleDialog2 - security question
-    handleDialog2 = (event) => {
-        event.preventDefault();
-
-        
-    }
-
-    getSecurityQuestion = () => {
-        let user = this.state.accountName;
-
+        let user = this.props.accountName;
         let data = JSON.parse(localStorage.getItem(user));
 
-        this.setState({accountSecurityQuestion: data.securityQuestion})
-        this.setState({accountSecurityAnswer: data.securityAnswer})
-    }
+        //data.accountPassword = this.state.accountPasswordRepeat;
 
-    //cancel button
-    cancelDialog2 = () => {
-        this.setState({showResetPasswordDialog2: false})
+        let newData = {};
+
+        newData.displayName = user;
+        newData.exerciseData = data.exerciseData;
+        newData.exerciseDataCount = data.exerciseDataCount;
+        newData.password = this.state.accountPasswordRepeat;
+        newData.profilePicDataURL = data.profilePicDataURL;
+        newData.securityAnswer = data.securityAnswer;
+        newData.securityQuestion = data.securityQuestion;
+
+        localStorage.setItem(user, JSON.stringify(newData));
+
+        this.props.cancelDialog3();
     }
 
     render() {
@@ -99,41 +89,53 @@ class ResetPasswordDialog extends React.Component {
         <div className="modal-content">
             <div className="modal-header">
             <center>
-            <h3 className="modal-title"><b>Enter your email address</b></h3>
+            <h3 className="modal-title"><b>Enter new password</b></h3>
             </center>
             <button className="close" 
-                onClick={this.props.cancelResetPasswordDialog}>
+                onClick={this.props.cancelDialog3}>
                 &times;</button>
             </div>
             <div className="modal-body">
-            <form onSubmit={this.handleDialog1}>
+            <form onSubmit={this.handleDialog3}>
+            
             <label>
-                Email: 
+                Password:
                 <input
                 className="form-control form-text form-center"
-                name="accountName"
-                type="email"
+                name="accountPassword"
+                type="password"
                 size="35"
-                placeholder="Enter Email Address"
-                pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+                placeholder="Enter Password"
+                pattern=
+                "(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$"
                 required={true}
-                ref={this.newUserRef}
-                value={this.state.accountName}
+                value={this.state.accountPassword}
                 onChange={this.handleNewAccountChange}
-                onBlur={this.setDefaultDisplayName}
                 />
             </label>
+            <br/>
+            <label>
+                Repeat Password:
+                <input
+                className="form-control form-text form-center"
+                name="accountPasswordRepeat"
+                type="password"
+                size="35"
+                placeholder="Repeat Password"
+                required={true}
+                ref={this.repeatPassRef}
+                value={this.state.accountPasswordRepeat}
+                onChange={this.handleNewAccountChange}
+                />
+            </label>
+            <br/>
+
             <button role="submit"
                 className="btn btn-primary btn-color-theme modal-submit-btn">
-                <span className="fa fa-user-plus"></span>&nbsp;Next
+                <span className="fa fa-user-plus"></span>&nbsp;Reset
             </button>
             </form>
-            {this.state.showResetPasswordDialog2 ? 
-            <ResetPasswordDialog2 
-                cancelDialog2={this.cancelDialog2}
-                accountSecurityQuestion={this.state.accountSecurityQuestion}
-                accountSecurityAnswer={this.state.accountSecurityAnswer}
-                accountName={this.state.accountName} /> : null}
+            {/* {this.state.showResetPasswordDialog2 ? <ResetPasswordDialog2 /> : null} */}
             </div>
         </div>
         </div>
@@ -142,4 +144,4 @@ class ResetPasswordDialog extends React.Component {
     }
 }
 
-export default ResetPasswordDialog;
+export default ResetPasswordDialog3;

@@ -30,6 +30,7 @@ handleLogin = () => {
                 loginBtnLabel: "Log In"});
     //Set current user
     this.props.setUserId(this.emailInputRef.current.value);
+
     //Trigger switch to FEED mode (default app landing page)
     this.props.changeMode(AppMode.FEED);
 }
@@ -41,6 +42,8 @@ handleLoginSubmit = (event) => {
         event.preventDefault();
         this.setState({loginBtnIcon: "fa fa-spin fa-spinner",
                         loginBtnLabel: "Logging In..."});
+
+
         //Initiate spinner for 1 second
         setTimeout(this.handleLogin,1000);
 }
@@ -77,6 +80,10 @@ handleLoginChange = () => {
   //to cancel creation of new account by clicking the "X" in top-right of dialog.
   cancelCreateAccount = () => {
       this.setState({showCreateAccountDialog: false});
+  }
+
+  cancelResetPasswordDialog = () => {
+      this.setState({showResetPasswordDialog: false});
   }
 
   render() {
@@ -133,7 +140,9 @@ handleLoginChange = () => {
               <CreateAccountDialog 
                 newAccountCreated={this.newAccountCreated}
                 cancelCreateAccount={this.cancelCreateAccount} /> : null}
-            {this.state.showResetPasswordDialog ? <ResetPasswordDialog /> : null}
+            {this.state.showResetPasswordDialog ? 
+            <ResetPasswordDialog
+                cancelResetPasswordDialog={this.cancelResetPasswordDialog} /> : null}
         </center>
         </div>
         )
